@@ -54,8 +54,6 @@ vector<vector<double> > laplacian(const vector<vector<double> > field)
 void integrate(vector<vector<double> >& field)
 {
   vector<vector<double> > laplace(N, vector<double>(N));
-  vector<vector<double> > double_laplace(N, vector<double>(N));
-
   vector<vector<double> > partial_t(N, vector<double>(N));
 
   laplace = laplacian(field);
@@ -76,13 +74,13 @@ void integrate(vector<vector<double> >& field)
     }
   }
 
-  partial_t = laplacian(partial_t);
+  laplace = laplacian(partial_t);
 
   #pragma omp parallel for
   for (int row = 0; row<N; row++)
   {
     for (int col = 0; col<N; col++)
-      field[row][col] += partial_t[row][col];
+      field[row][col] += laplace[row][col];
   }
 
   return;

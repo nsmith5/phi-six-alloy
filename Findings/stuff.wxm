@@ -1,0 +1,40 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 14.09.0 ] */
+
+/* [wxMaxima: input   start ] */
+F0(x) := 1$
+F2(x) := (x-1/2)^2$
+F4(x) := (x-1/2)^4$
+F6(x) := (x-1/2)^6$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+P0(x):= F0(x);
+P2(x):= F2(x) - (1/12)*P0(x);
+P4(x):= F4(x) - (3/14)*P2(x) - (1/80)*P0(x);
+P6(x):= F6(x) - (15/44)*P4(x)- (5/112)*P2(x)-(1/448);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+n0: 1$
+n2: 6*sqrt(5)$
+n4: 210$
+n6: 923*sqrt(13)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+expand(ratsimp(P4(x)));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+P2(x):= x^2$
+P4(x):= x^4-(5/7)*x^2$
+P6(x):= x^6+(27/22)*x^4-(65/154)*x^2$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+plot2d([n0*P0(x), n2*P2(x), n4*P4(x), n6*P6(x)], [x, 0, 1]);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
