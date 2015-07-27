@@ -35,7 +35,7 @@ expand(ratsimp(diff(Landau(x), x, 1)));
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: input   start ] */
-plot2d(1*n2*P2(x) +0.0*n4*P4(x) + 0.67*n6*P6(x), [x,0,1]);
+plot2d(2.*n2*P2(x) +0.0*n4*P4(x) + 0.67*n6*P6(x), [x,0,1]);
 /* [wxMaxima: input   end   ] */
 
 /* Maxima can't load/batch files which end with a comment! */
