@@ -57,7 +57,6 @@ void integrate(vector<vector<double> >& field)
   vector<vector<double> > partial_t(N, vector<double>(N));
 
   laplace = laplacian(field);
-  double square = 0.0;
 
   #pragma omp parallel for
   for (int row = 0; row<N; row++)
@@ -66,9 +65,8 @@ void integrate(vector<vector<double> >& field)
     {
       // Derivative term
       partial_t[row][col] = -W*laplace[row][col];
-      square = field[row][col]*field[row][col];
       // Polynomial terms
-      partial_t[row][col] += field[row][col]*(r + square*(u+v*square));
+      partial_t[row][col] += c0 + field[row][col]*(c1 + field[row][col]*(c2 + field[row][col]*(c3 + field[row][col]*(c4 + field[row][col]*(c5)))));
       // Multiply time scale
       partial_t[row][col] *= Gamma*dt;
     }

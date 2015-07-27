@@ -16,6 +16,6 @@ for file in output_files:
     fig, ax = plt.subplots(nrows = 1, ncols=1)
     cax = ax.imshow(data)
     cbar = fig.colorbar(cax)
-    cbar.set_clim(0.5, 3)
+    cbar.set_clim(0, 1)
     fig.savefig(image_file)
     plt.close(fig)
