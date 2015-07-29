@@ -10,6 +10,7 @@ that could be stemming from the higher order powers...
 Goals:
 - Show that this is equavalent but a more simple representation than the two order parameter theory (through mass conservation?)
 - Show that there is a meta-stable liquid and solid equilibrium below the eutectic point..
+- Simulate a liquid pool that is cooled
 
 Questions:
 - Will a phi to the six theory create a stronger slope towards the solid to allow for sufficient solute rejection?
