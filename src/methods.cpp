@@ -9,7 +9,6 @@
 
 using namespace std;
 
-
 void printer(vector<vector<double> > field, int time)
 {
   char timestr[21];

@@ -4,11 +4,11 @@
 
 // Thermodynamic parameters
 
-const double Gamma = 1.0;     //# Mobility
-const double W = 1.00;         //# Curvature penalty
-const double r = 2.0;         //# Quadratic Landau constant
+const double Gamma = 1.0;    //# Mobility
+const double W = 1.00;       //# Curvature penalty
+static double r = 1.00;              //# Quadratic Landau constant
 const double u = 0.0;        //# Quartic Landau constant
-const double v = 0.67;        //# Sixth order Landau constant
+const double v = 0.5;        //# Sixth order Landau constant
 
 // Physical parameters
 

@@ -21,12 +21,17 @@ int main(int argc, char ** argv)
       phi[i][j] =  0.5;
 
   // Simulate!
-  omp_set_num_threads(6);
-  for (int tim = 0; tim<200000; tim++)
+  omp_set_num_threads(4);
+
+  int steps = 200000;
+  for (int tim = 0; tim<steps; tim++)
   {
+    r = 1.0 - 15.0*tim/static_cast<double>(steps);
     if (tim%1000 == 0)
     {
-      cout<<100.0*static_cast<double>(tim)/200000.0<<" Percent finished"<<endl;
+      cout<<100.0*static_cast<double>(tim)/static_cast<double>(steps)
+          <<" Percent finished"
+          <<". r ="<<r<<endl;
       printer(phi, tim);
     }
     integrate(phi);
