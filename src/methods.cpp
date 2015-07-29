@@ -51,7 +51,7 @@ vector<vector<double> > laplacian(const vector<vector<double> > field)
   return output;
 }
 
-void integrate(vector<vector<double> >& field)
+void integrate(vector<vector<double> >& phi_x, vector<vector<double> >& phi_y)
 {
   vector<vector<double> > laplace(N, vector<double>(N));
   vector<vector<double> > partial_t(N, vector<double>(N));

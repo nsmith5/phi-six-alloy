@@ -20,4 +20,4 @@ void printer(std::vector<std::vector<double> > field, int time);
 
 std::vector<std::vector<double> > laplacian(const std::vector<std::vector<double> > field);
 
-void integrate(std::vector<std::vector<double> >& field);
+void integrate(std::vector<std::vector<double> >& phi_x, std::vector<std::vector<double> >& phi_y);
