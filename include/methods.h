@@ -16,7 +16,7 @@ inline int ring(int i, int length)
 	else return i%length;
 }
 
-void printer(std::vector<std::vector<double> > field, int time);
+void printer(std::vector<std::vector<double> > phi_x, std::vector<std::vector<double> > phi_y, int time);
 
 std::vector<std::vector<double> > laplacian(const std::vector<std::vector<double> > field);
 

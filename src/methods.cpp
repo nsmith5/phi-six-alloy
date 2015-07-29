@@ -10,7 +10,7 @@
 using namespace std;
 
 
-void printer(vector<vector<double> > field, int time)
+void printer(vector<vector<double> > phi_x, vector<vector<double> > phi_y, int time)
 {
   char timestr[21];
   sprintf(timestr, "./data/output%d.dat", time);
@@ -22,7 +22,7 @@ void printer(vector<vector<double> > field, int time)
   {
     for (int col = 0; col<N; col++)
     {
-      file<<field[row][col]<<" ";
+      file<<phi_x[row][col]*phi_x[row][col] + phi_y[row][col]*phi_y[row][col]<<" ";
     }
     file<<endl;
   }
@@ -53,11 +53,12 @@ vector<vector<double> > laplacian(const vector<vector<double> > field)
 
 void integrate(vector<vector<double> >& phi_x, vector<vector<double> >& phi_y)
 {
-  vector<vector<double> > laplace(N, vector<double>(N));
+  vector<vector<double> > partial_x_t(N, vector<double>(N));
+  vector<vector<double> > partial_y_t(N, vector<double>(N));
   vector<vector<double> > partial_t(N, vector<double>(N));
 
   // Integrate the x part of the field first:
-  laplace = laplacian(phi_x);
+  partial_x_t = laplacian(phi_x);
 
   #pragma omp parallel for
   for (int row = 0; row<N; row++)
@@ -65,26 +66,53 @@ void integrate(vector<vector<double> >& phi_x, vector<vector<double> >& phi_y)
     for (int col = 0; col<N; col++)
     {
       // Derivative term
-      partial_t[row][col] = -W*laplace[row][col];
+      partial_t[row][col] = -W*partial_x_t[row][col];
       // Polynomial terms
       partial_t[row][col] += r*phi_x[row][col];
-      partial_t[row][col] += u*pow(phi_x[row][col], 3.0)
-                           + u*pow(phi_y[row][col], 2.0)*phi_x[row][col];
-      partial_t[row][col] += v*pow(phi_x[row][col], 5.0)
-                           + 2.0*v*pow(phi_y[row][col], 2.0)*pow(phi_x[row][col], 3.0)
-                           + v*phi_x[row][col]*pow(phi_y[row][col], 4.0);
+      partial_t[row][col] += u*phi_x[row][col]*phi_x[row][col]*phi_x[row][col]
+                           + u*phi_y[row][col]*phi_y[row][col]*phi_x[row][col];
+      partial_t[row][col] += v*phi_x[row][col]*phi_x[row][col]*phi_x[row][col]*phi_x[row][col]*phi_x[row][col]
+                           + 2.0*v*phi_y[row][col]*phi_y[row][col]*phi_x[row][col]*phi_x[row][col]*phi_x[row][col]
+                           + v*phi_x[row][col]*phi_y[row][col]*phi_y[row][col]*phi_y[row][col]*phi_y[row][col];
       // Multiply time scale
       partial_t[row][col] *= Gamma*dt;
     }
   }
 
-  laplace = laplacian(partial_t);
+  partial_x_t = laplacian(partial_t);
+
+  // Integrate in y next:
+  partial_y_t = laplacian(phi_y);
 
   #pragma omp parallel for
   for (int row = 0; row<N; row++)
   {
     for (int col = 0; col<N; col++)
-      field[row][col] += laplace[row][col];
+    {
+      // Derivative term
+      partial_t[row][col] = -W*partial_y_t[row][col];
+      // Polynomial terms
+      partial_t[row][col] += r*phi_y[row][col];
+      partial_t[row][col] += u*phi_y[row][col]*phi_y[row][col]*phi_y[row][col]
+                           + u*phi_x[row][col]*phi_x[row][col]*phi_y[row][col];
+      partial_t[row][col] += v*phi_y[row][col]*phi_y[row][col]*phi_y[row][col]*phi_y[row][col]*phi_y[row][col]
+                           + 2.0*v*phi_x[row][col]*phi_x[row][col]*phi_y[row][col]*phi_y[row][col]*phi_y[row][col]
+                           + v*phi_y[row][col]*phi_x[row][col]*phi_x[row][col]*phi_x[row][col]*phi_x[row][col];
+      // Multiply time scale
+      partial_t[row][col] *= Gamma*dt;
+    }
+  }
+
+  partial_y_t = laplacian(partial_t);
+
+  #pragma omp parallel for
+  for (int row = 0; row<N; row++)
+  {
+    for (int col = 0; col<N; col++)
+    {
+      phi_y[row][col] += partial_y_t[row][col];
+      phi_x[row][col] += partial_x_t[row][col];
+    }
   }
 
   return;

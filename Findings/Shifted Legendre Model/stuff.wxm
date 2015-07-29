@@ -23,19 +23,11 @@ n6: 923*sqrt(13)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: input   start ] */
-Landau(x):= r*n2*P2(x) + u*n4*P4(x) + v*n6*P6(x);
+plot2d(-1.0*n2*P2(x) +0.0*n4*P4(x) + 0.5*n6*P6(x), [x,0,1]);
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: input   start ] */
-plot2d([n0*P0(x), n2*P2(x), n4*P4(x), n6*P6(x)], [x, 0, 1]);
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: input   start ] */
-expand(ratsimp(diff(Landau(x), x, 1)));
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: input   start ] */
-plot2d(2.*n2*P2(x) +0.0*n4*P4(x) + 0.67*n6*P6(x), [x,0,1]);
+plot2d(2.0*x^2 + -3.0*x^4 + 0.67*x^6, [x, -2, 2]);
 /* [wxMaxima: input   end   ] */
 
 /* Maxima can't load/batch files which end with a comment! */

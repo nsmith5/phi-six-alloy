@@ -11,32 +11,33 @@ using namespace std;
 int main(int argc, char ** argv)
 {
   mt19937_64 twist;                                           // Mersenne twister random number generator
-  normal_distribution<double> gaussian(0.9, 0.01);             // Gaussian distribution
+  normal_distribution<double> gaussian(0.0, 0.25);            // Gaussian distribution
 
   vector<vector<double> > phi_x(N, vector<double>(N, 0.0));
-  vector<vector<double> > phi_y(N, vector<double>(N, 0.0))
+  vector<vector<double> > phi_y(N, vector<double>(N, 0.0));
 
   // Make initial conditions:
-  for (int i = 0; i<N; i++)
+  for (int i = 125; i<175; i++)
   {
     for (int j = 0; j<N; j++)
     {
-
+      phi_x[i][j] = 1.56 + gaussian(twist);
+      phi_y[i][j] = gaussian(twist);
     }
   }
 
-
-  // // Simulate!
-  // omp_set_num_threads(6);
-  // for (int tim = 0; tim<200000; tim++)
-  // {
-  //   if (tim%1000 == 0)
-  //   {
-  //     cout<<100.0*static_cast<double>(tim)/200000.0<<" Percent finished"<<endl;
-  //     printer(phi, tim);
-  //   }
-  //   integrate(phi);
-  // }
+  // Simulate!
+  int steps = 2000;
+  omp_set_num_threads(4);
+  for (int tim = 0; tim<steps; tim++)
+  {
+    if (tim%10 == 0)
+    {
+      cout<<100.0*static_cast<double>(tim)/static_cast<double>(steps)<<" Percent finished"<<endl;
+      printer(phi_x, phi_y, tim);
+    }
+    integrate(phi_x, phi_y);
+  }
 
   return 0;
 }
