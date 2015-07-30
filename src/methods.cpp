@@ -32,6 +32,42 @@ void printer(vector<vector<double> > phi_x, vector<vector<double> > phi_y, int t
   return;
 }
 
+vector<vector<double> > div(const vector<vector<double> > phi_x, const vector<vector<double> > phi_y)
+{
+  vector<vector<double> > output(N, vector<double>(N));
+
+  #pragma omp parallel for
+  for (int row = 0; row<N; row++)
+  {
+    for (int col = 0; col<N; col++)
+    {
+      output[row][col] = phi_x[row][ring(col+1, N)] - phi_x[row][ring(col - 1, N)];
+      output[row][col] += phi_y[ring(row+1, N)][col] - phi_y[ring(row - 1, N)][col];
+      output[row][col] /= 2*dx;
+    }
+  }
+
+  return output;
+}
+
+vector<vector<double> > curl(const vector<vector<double> > phi_x, const vector<vector<double> > phi_y)
+{
+  vector<vector<double> > output(N, vector<double>(N));
+
+  #pragma omp parallel for
+  for (int row = 0; row<N; row++)
+  {
+    for (int col = 0; col<N; col++)
+    {
+      output[row][col] = phi_y[row][ring(col+1, N)] - phi_y[row][ring(col - 1, N)];
+      output[row][xol] -= phi_x[ring(row+1, N)][col] - phi_x[ring(row - 1, N)][col];
+      output[row][col] /= 2*dx;
+    }
+  }
+
+  return output;
+}
+
 vector<vector<double> > laplacian(const vector<vector<double> > field)
 {
   vector<vector<double> > output(N, vector<double>(N));

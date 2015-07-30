@@ -18,6 +18,10 @@ inline int ring(int i, int length)
 
 void printer(std::vector<std::vector<double> > phi_x, std::vector<std::vector<double> > phi_y, int time);
 
+std::vector<std::vector<double> > div(const std::vector<std::vector<double> > field_x, const std::vector<std::vector<double> > field_y);
+
+std::vector<std::vector<double> > curl(const std::vector<std::vector<double> > field_x, const std::vector<std::vector<double> > field_y);
+
 std::vector<std::vector<double> > laplacian(const std::vector<std::vector<double> > field);
 
-void integrate(std::vector<std::vector<double> >& phi_x, std::vector<std::vector<double> >& phi_y);
+void integrate(std::vector<std::vector<double> >& phi_x, std::vector<std::vector<double> >& phi_y,  vector<vector<double> >& phi_n);
