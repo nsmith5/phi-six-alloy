@@ -50,12 +50,15 @@ vector<vector<double> > laplacian(const vector<vector<double> > field)
   return output;
 }
 
-void integrate(vector<vector<double> >& field)
+void integrate(vector<vector<double> >& phi, vector<vector<double> >& theta)
 {
   vector<vector<double> > laplace(N, vector<double>(N));
   vector<vector<double> > partial_t(N, vector<double>(N));
 
-  laplace = laplacian(field);
+  // Integrate Phi first..
+
+  partial_t = laplacian(phi);
+  laplace = laplacian(theta);
 
   #pragma omp parallel for
   for (int row = 0; row<N; row++)
@@ -63,9 +66,15 @@ void integrate(vector<vector<double> >& field)
     for (int col = 0; col<N; col++)
     {
       // Derivative term
-      partial_t[row][col] = -W*laplace[row][col];
+      partial_t[row][col] *= -W;
       // Polynomial terms
-      partial_t[row][col] += c0 + field[row][col]*(c1 + field[row][col]*(c2 + field[row][col]*(c3 + field[row][col]*(c4 + field[row][col]*(c5)))));
+      partial_t[row][col] += c0 + phi[row][col]
+                           *(c1 + phi[row][col]
+                           *(c2 + phi[row][col]
+                           *(c3 + phi[row][col]
+                           *(c4 + phi[row][col]*(c5)))));
+      // Coupling term
+      //partial_t[row][col] += c*(phi[row][col]-0.5)*laplace[row][col];
       // Multiply time scale
       partial_t[row][col] *= Gamma*dt;
     }
@@ -73,11 +82,17 @@ void integrate(vector<vector<double> >& field)
 
   laplace = laplacian(partial_t);
 
+  // Integrate Theta next
+
   #pragma omp parallel for
   for (int row = 0; row<N; row++)
   {
-    for (int col = 0; col<N; col++)
-      field[row][col] += laplace[row][col];
+    for(int col = 0; col<N; col++)
+    {
+      //laplace[row][col] *= -D*c*(phi[row][col]-0.5)*(phi[row][col]-0.5)*dt;
+      phi[row][col] += laplace[row][col];
+      //theta[row][col] += laplace[row][col];
+    }
   }
 
   return;

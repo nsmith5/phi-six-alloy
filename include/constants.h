@@ -6,9 +6,14 @@
 
 const double Gamma = 1.0;    //# Mobility
 const double W = 1.00;       //# Curvature penalty
-static double r = 1.00;              //# Quadratic Landau constant
+const double r = -1.00;      //# Quadratic Landau constant
 const double u = 0.0;        //# Quartic Landau constant
 const double v = 0.5;        //# Sixth order Landau constant
+
+// Theta constants
+
+const double c = 1.0;       // Coupling constant
+const double D = 1.0;       // Diffusion constant
 
 // Physical parameters
 
