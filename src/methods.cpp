@@ -78,3 +78,29 @@ void integrate(vector<vector<double> >& field)
 
   return;
 }
+
+void make_laplace(double* laplace)
+{
+  // Set to zero first and make diagonal -4
+  for (int row = 0; row<N*N; row++)
+  {
+    for (int col = 0; col<N*N; col++)
+    {
+      *(laplace + N*N*row + col) = 0.0;
+    }
+    *(laplace + N*N*row + row) = -4.0;
+  }
+
+  // Find the neighbours and make them one
+  for (int row = 0; row<N*N; row++)
+  {
+    i = row/N;
+    j = row-i*N;
+    *(laplace + (N*N)*row + (ring(i+1,N)*N+j)) = 1.0;
+    *(laplace + (N*N)*row + (ring(i-1,N)*N+j)) = 1.0;
+    *(laplace + (N*N)*row + (i*N+ring(j+1,N))) = 1.0;
+    *(laplace + (N*N)*row + (i*N+ring(j-1,N))) = 1.0;
+  }
+  
+  return;
+}
