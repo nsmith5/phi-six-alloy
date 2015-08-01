@@ -1,4 +1,5 @@
 #include <vector>
+#include <gsl/gsl_cblas.h>        // gsl cblas
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -30,22 +31,11 @@ void printer(vector<vector<double> > field, int time)
   return;
 }
 
-vector<vector<double> > laplacian(const vector<vector<double> > field)
+void laplacian(double* output, double* field, double* laplacian)
 {
-  vector<vector<double> > output(N, vector<double>(N));
-
-  for (int row = 0; row<N; row++)
-  {
-    for (int col = 0; col<N; col++)
-    {
-      output[row][col] = field[ring(row + 1, N)][col] + field[row][ring(col + 1, N)]
-                       + field[ring(row - 1, N)][col] + field[row][ring(col - 1, N)]
-                       - 4.0*field[row][col];
-      output[row][col] *= 1.0/(dx*dx);
-    }
-  }
-
-  return output;
+  cblas_dgemv(CblasRowMajor, CblasNoTrans, N*N, N*N, 1.0, laplacian,
+              N*N, field, 1, 0.0, output, 1);
+  return;
 }
 
 void integrate(vector<vector<double> >& field)
@@ -101,6 +91,14 @@ void make_laplace(double* laplace)
     *(laplace + (N*N)*row + (i*N+ring(j+1,N))) = 1.0;
     *(laplace + (N*N)*row + (i*N+ring(j-1,N))) = 1.0;
   }
-  
+
+  for (int row = 0; row<N*N; row++)
+  {
+    for (int col = 0; col<N*N; col++)
+    {
+      *(laplace + (N*N)*row + col) *= 1.0/(dx*dx);
+    }
+  }
+
   return;
 }
