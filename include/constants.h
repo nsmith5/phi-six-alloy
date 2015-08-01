@@ -11,9 +11,9 @@ const double v = 0.5;        //# Sixth order Landau constant
 
 // Physical parameters
 
-const double dx = 1.0/300.0;        //# Lattice spacing
+const double dx = 1.0/100.0;        //# Lattice spacing
 const double dt = 0.00000125;       //# Time step size
-const int N = 300;         //# Number of lattice points (N x N)
+const int N = 100;         //# Number of lattice points (N x N)
 
 // Legendre constants (the coefficients of the derivative of r*P2(x)+u*P4(x)+v*P6(x), (normalized))
 

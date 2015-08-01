@@ -33,6 +33,7 @@ void printer(double* field, int time)
 
 void laplacian(double* output, double* field, double* laplacian)
 {
+  openblas_set_num_threads(4);
   cblas_dgemv(CblasRowMajor, CblasNoTrans, N*N, N*N, 1.0, laplacian,
               N*N, field, 1, 0.0, output, 1);
   return;

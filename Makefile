@@ -2,7 +2,7 @@ CC = g++
 OBJ = ./obj/
 INC = ./include
 SRC = ./src/
-CFLAGS = -Wall -I$(INC) -lopenblas
+CFLAGS = -Wall -I$(INC) -lopenblas -lpthread -lgfortran
 
 all: main methods
 	$(CC) $(OBJ)*.o -o main $(CFLAGS)

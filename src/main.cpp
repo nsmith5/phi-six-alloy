@@ -1,4 +1,5 @@
 #include <iostream>
+#include <openblas/cblas.h>
 #include <cstdlib>
 #include <cassert>
 #include "methods.h"
@@ -9,7 +10,7 @@ using namespace std;
 int main(int argc, char ** argv)
 {
    double* phi = (double*)malloc(N*N*sizeof(double));
-   double* laplace = (double*)malloc(N*N*sizeof(double));
+   double* laplace = (double*)malloc(N*N*N*N*sizeof(double));
    double* output = (double*)malloc(N*N*sizeof(double));
 
    make_laplace(laplace);
@@ -20,8 +21,10 @@ int main(int argc, char ** argv)
       *(phi+i*N+j) = sin(2.0*3.1415*i/N)*sin(2.0*3.1416*j/N);
 
   // Simulate!
+  for (int i = 0; i<100; i++)
+    laplacian(output, phi, laplace);
 
-  printer(phi, 0);
+  //printer(output, 0);
   // int steps = 200;
   // for (int tim = 0; tim<steps; tim++)
   // {
