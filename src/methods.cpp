@@ -54,11 +54,23 @@ void integrate(vector<vector<double> >& phi, vector<vector<double> >& theta)
 {
   vector<vector<double> > laplace(N, vector<double>(N));
   vector<vector<double> > partial_t(N, vector<double>(N));
-
+  vector<vector<double> > laplace_theta(N, vector<double>(N));
   // Integrate Phi first..
 
-  partial_t = laplacian(phi);
-  laplace = laplacian(theta);
+  laplace = laplacian(phi);
+  laplace_theta = laplacian(theta);
+
+  for (int iter = 0; iter<10; iter++)
+  {
+    #pragma omp parallel for
+    for (int row = 0; row<N; row++)
+    {
+      for(int col = 0; col<N; col++)
+      {
+        theta[row][col] += D*c*(phi[row][col]-0.5)*(phi[row][col]-0.5)*laplace_theta[row][col]*dt;
+      }
+    }
+  }
 
   #pragma omp parallel for
   for (int row = 0; row<N; row++)
@@ -66,7 +78,7 @@ void integrate(vector<vector<double> >& phi, vector<vector<double> >& theta)
     for (int col = 0; col<N; col++)
     {
       // Derivative term
-      partial_t[row][col] *= -W;
+      partial_t[row][col] = -W*laplace[row][col];
       // Polynomial terms
       partial_t[row][col] += c0 + phi[row][col]
                            *(c1 + phi[row][col]
@@ -74,7 +86,7 @@ void integrate(vector<vector<double> >& phi, vector<vector<double> >& theta)
                            *(c3 + phi[row][col]
                            *(c4 + phi[row][col]*(c5)))));
       // Coupling term
-      //partial_t[row][col] += c*(phi[row][col]-0.5)*laplace[row][col];
+      partial_t[row][col] += c*(phi[row][col]-0.5)*laplace_theta[row][col];
       // Multiply time scale
       partial_t[row][col] *= Gamma*dt;
     }
@@ -89,9 +101,8 @@ void integrate(vector<vector<double> >& phi, vector<vector<double> >& theta)
   {
     for(int col = 0; col<N; col++)
     {
-      //laplace[row][col] *= -D*c*(phi[row][col]-0.5)*(phi[row][col]-0.5)*dt;
+      //theta[row][col] += D*c*(phi[row][col]-0.5)*(phi[row][col]-0.5)*laplace_theta[row][col]*dt;
       phi[row][col] += laplace[row][col];
-      //theta[row][col] += laplace[row][col];
     }
   }
 
