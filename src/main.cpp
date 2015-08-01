@@ -1,7 +1,6 @@
 #include <iostream>
 #include <random>
 #include <vector>
-#include <omp.h>
 
 #include "methods.h"
 #include "constants.h"
@@ -21,7 +20,6 @@ int main(int argc, char ** argv)
       phi[i][j] =  0.5;
 
   // Simulate!
-  omp_set_num_threads(4);
 
   int steps = 200000;
   for (int tim = 0; tim<steps; tim++)

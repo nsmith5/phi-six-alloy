@@ -2,7 +2,6 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <omp.h>
 
 #include "constants.h"
 #include "methods.h"
@@ -35,7 +34,6 @@ vector<vector<double> > laplacian(const vector<vector<double> > field)
 {
   vector<vector<double> > output(N, vector<double>(N));
 
-  #pragma omp parallel for
   for (int row = 0; row<N; row++)
   {
     for (int col = 0; col<N; col++)
@@ -57,7 +55,6 @@ void integrate(vector<vector<double> >& field)
 
   laplace = laplacian(field);
 
-  #pragma omp parallel for
   for (int row = 0; row<N; row++)
   {
     for (int col = 0; col<N; col++)
@@ -73,7 +70,6 @@ void integrate(vector<vector<double> >& field)
 
   laplace = laplacian(partial_t);
 
-  #pragma omp parallel for
   for (int row = 0; row<N; row++)
   {
     for (int col = 0; col<N; col++)
