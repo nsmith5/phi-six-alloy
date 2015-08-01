@@ -2,7 +2,7 @@ CC = g++
 OBJ = ./obj/
 INC = ./include
 SRC = ./src/
-CFLAGS = -Wall -Werror -I$(INC) -lgsl
+CFLAGS = -Wall -I$(INC) -lopenblas
 
 all: main methods
 	$(CC) $(OBJ)*.o -o main $(CFLAGS)

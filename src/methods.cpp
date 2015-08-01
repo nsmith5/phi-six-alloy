@@ -1,5 +1,5 @@
 #include <vector>
-#include <gsl/gsl_cblas.h>        // gsl cblas
+#include <openblas/cblas.h>        // gsl cblas
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -9,7 +9,7 @@
 
 using namespace std;
 
-void printer(vector<vector<double> > field, int time)
+void printer(double* field, int time)
 {
   char timestr[21];
   sprintf(timestr, "./data/output%d.dat", time);
@@ -21,7 +21,7 @@ void printer(vector<vector<double> > field, int time)
   {
     for (int col = 0; col<N; col++)
     {
-      file<<field[row][col]<<" ";
+      file<<*(field +N*row+col)<<" ";
     }
     file<<endl;
   }
@@ -38,36 +38,36 @@ void laplacian(double* output, double* field, double* laplacian)
   return;
 }
 
-void integrate(vector<vector<double> >& field)
-{
-  vector<vector<double> > laplace(N, vector<double>(N));
-  vector<vector<double> > partial_t(N, vector<double>(N));
-
-  laplace = laplacian(field);
-
-  for (int row = 0; row<N; row++)
-  {
-    for (int col = 0; col<N; col++)
-    {
-      // Derivative term
-      partial_t[row][col] = -W*laplace[row][col];
-      // Polynomial terms
-      partial_t[row][col] += c0 + field[row][col]*(c1 + field[row][col]*(c2 + field[row][col]*(c3 + field[row][col]*(c4 + field[row][col]*(c5)))));
-      // Multiply time scale
-      partial_t[row][col] *= Gamma*dt;
-    }
-  }
-
-  laplace = laplacian(partial_t);
-
-  for (int row = 0; row<N; row++)
-  {
-    for (int col = 0; col<N; col++)
-      field[row][col] += laplace[row][col];
-  }
-
-  return;
-}
+// void integrate(vector<vector<double> >& field)
+// {
+//   vector<vector<double> > laplace(N, vector<double>(N));
+//   vector<vector<double> > partial_t(N, vector<double>(N));
+//
+//   laplace = laplacian(field);
+//
+//   for (int row = 0; row<N; row++)
+//   {
+//     for (int col = 0; col<N; col++)
+//     {
+//       // Derivative term
+//       partial_t[row][col] = -W*laplace[row][col];
+//       // Polynomial terms
+//       partial_t[row][col] += c0 + field[row][col]*(c1 + field[row][col]*(c2 + field[row][col]*(c3 + field[row][col]*(c4 + field[row][col]*(c5)))));
+//       // Multiply time scale
+//       partial_t[row][col] *= Gamma*dt;
+//     }
+//   }
+//
+//   laplace = laplacian(partial_t);
+//
+//   for (int row = 0; row<N; row++)
+//   {
+//     for (int col = 0; col<N; col++)
+//       field[row][col] += laplace[row][col];
+//   }
+//
+//   return;
+// }
 
 void make_laplace(double* laplace)
 {
@@ -84,8 +84,8 @@ void make_laplace(double* laplace)
   // Find the neighbours and make them one
   for (int row = 0; row<N*N; row++)
   {
-    i = row/N;
-    j = row-i*N;
+    int i = row/N;
+    int j = row-i*N;
     *(laplace + (N*N)*row + (ring(i+1,N)*N+j)) = 1.0;
     *(laplace + (N*N)*row + (ring(i-1,N)*N+j)) = 1.0;
     *(laplace + (N*N)*row + (i*N+ring(j+1,N))) = 1.0;

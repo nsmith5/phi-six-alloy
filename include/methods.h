@@ -16,8 +16,10 @@ inline int ring(int i, int length)
 	else return i%length;
 }
 
-void printer(std::vector<std::vector<double> > field, int time);
+void printer(double* field, int time);
 
-std::vector<std::vector<double> > laplacian(const std::vector<std::vector<double> > field);
+void laplacian(double* output, double* field, double* laplacian);
 
-void integrate(std::vector<std::vector<double> >& field);
+// void integrate(std::vector<std::vector<double> >& field);
+
+void make_laplace(double* laplace);

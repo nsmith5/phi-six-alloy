@@ -1,5 +1,4 @@
 //  Constants for Simulation
-
 #include <cmath>
 
 // Thermodynamic parameters
@@ -12,7 +11,7 @@ const double v = 0.5;        //# Sixth order Landau constant
 
 // Physical parameters
 
-const double dx = 0.1;        //# Lattice spacing
+const double dx = 1.0/300.0;        //# Lattice spacing
 const double dt = 0.00000125;       //# Time step size
 const int N = 300;         //# Number of lattice points (N x N)
 
